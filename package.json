@@ -1,5 +1,5 @@
 {
-  "name": "my-turborepo",
+  "name": "week-22-exceldraw-clone",
   "private": true,
   "scripts": {
     "build": "turbo run build",
