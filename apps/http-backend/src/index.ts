@@ -77,34 +77,36 @@ try {
   })  
 
 
-app.post("/room", middleware,async(req, res) => {
-  const parsedData = CreateRoomSchema.safeParse(req.body)
-  if (!parsedData.success) {
-    res.json({
-      message: "Incorrect Input",
-      status:400
-    })
-    return
-  }
-  
-  // @ts-ignore
-  const userId = req.userId
-  try {
-   const room =   await prismaClient.room.create({
-    data: {
-      slug: parsedData.data.name,
-      adminId:userId
-     }
-   })
+app.post("/room", middleware, async (req, res) => {
+    const parsedData = CreateRoomSchema.safeParse(req.body);
+    if (!parsedData.success) {
+        res.json({
+            message: "Incorrect inputs"
+        })
+        return;
+    }
+    // @ts-ignore: TODO: Fix this
+    const userId = req.userId;
+    console.log("userId",userId);
     
-    res.status(200).json({
-       roomId:room.id
-     })
-  } catch (e) {
-    res.status(411).json({
-       message:"Room already exists with this anme"
-     })
-  }
+    try {
+        const room = await prismaClient.room.create({
+            data: {
+                slug: parsedData.data.name,
+                adminId: userId
+            }
+        })
+
+        res.json({
+            roomId: room.id
+        })
+    } catch (e) {
+      console.log("error",e);
+      
+        res.status(411).json({
+            message: "Room already exists with this name"
+        })
+    }
 })
 
 app.listen(3001)
